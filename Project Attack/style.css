@@ -1,0 +1,16 @@
+
+
+/**-----화면 배경-----**/
+
+/*배경*/	
+	body{margin:0; padding:0;}		
+	/*
+	#main{width:100%; height:784px; background: url('img/space.gif') no-repeat; background-size:cover; overflow:hidden; margin:0; padding:0;}
+	*/
+	canvas {background: url('img/space.gif') no-repeat;}
+
+/**-----플레이어 말-----**/
+
+
+
+	

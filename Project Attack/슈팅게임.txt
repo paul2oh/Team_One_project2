@@ -1,0 +1,57 @@
+플레이.js{
+
+플레이어 이동
+키보드 (상,하,좌,우)
+-done!
+
+플레이어 생성
+->초기위치
+
+
+플레이어 죽음(충돌체크)
+-죽음 시 공격 level 초기화
+
+플레이어 점수
+적 처치 시 마다 점수 up
+
+플레이어 공격
+-power level 1
+-power level 2
+-power level 3
+(level up item 을 먹으면 level 1씩 올라감)
+}
+
+적.js{
+
+적 이동
+적 공격
+적 생성
+적 죽음(충돌체크)
+
+}
+
+item.js{
+공격level up item
+
+bomb item
+
+
+
+}
+
+게임.js{
+
+플레이어
+
+적
+
+점수
+
+시작
+
+종료
+
+
+}
+
+start -> character select -> main

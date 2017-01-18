@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+
+var myGamePiece;
+var myMissileList = [];
+
+var enemyList = [];
+var enemyMissileList = [];
+
+const SCREEN_WIDTH = 500;
+const SCREEN_HEIGHT = 500;
+
+
+
+function startGame() {
+    myGameArea.start();
+    myGamePiece = new component(30, 30, "red", 10, 120);
+
+    //크기, 크기, 색, 등장X, 등장Y, 타입, 등장할시간
+    setTimeout('createEnemy(30, 30, "blue", 350, -20, 1);', 300);
+    setTimeout('createEnemy(30, 30, "blue", 150, -20, 2);', 300);
+    setTimeout('createEnemy(30, 30, "blue", 150, -20, 3);', 2000);
+}
+
+function createMissile(size, currentX, currentY, speedX, speedY) {
+    var myMissile = new missile(size, "black", currentX+10, currentY);
+    myMissile.speedX = speedX;
+    myMissile.speedY = speedY;
+    myMissileList.push(myMissile);
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = SCREEN_WIDTH;
+        this.canvas.height = SCREEN_HEIGHT;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 20);
+        window.addEventListener('keydown', function (e) {
+            myGameArea.keys = (myGameArea.keys || []);
+            myGameArea.keys[e.keyCode] = (e.type == "keydown");
+        })
+        window.addEventListener('keyup', function (e) {
+            myGameArea.keys[e.keyCode] = (e.type == "keydown");            
+        })
+    }, 
+    clear : function(){
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+
+//적 생성 메서드
+//type에 맞춰서 해당 기체의 속도를 변경해준다.
+function createEnemy(width, height, color, x, y, type) {
+    var newEnemy = [];
+    newEnemy[0] = new enemy(width, height, color, x, y);
+
+    enemyList.push(newEnemy[0]);
+    enemyType(newEnemy, type);
+}
+
+
+//좀... 더럽게 짜볼까 ㅡ ㅡ;
+//주소 호출이 안되서 넘나 귀찮당
+function enemyType(enemy, type){
+    switch(type){
+        case 1:
+            enemy[0].setSpeedY(2);
+            setTimeout(function() { enemy[0].setSpeedY(0); },800);
+            setTimeout(function() { enemy[0].setSpeedX(1); },1200);
+            setTimeout(function() { enemy[0].setSpeedX(0); },2700);
+            setTimeout(function() { enemy[0].setSpeedY(2); },4200);
+            setTimeout(function() { enemy[0].setSpeedY(0); },5700);
+            setTimeout(function() { enemy[0].setSpeedY(2); },9900);
+            break;
+        case 2:
+            enemy[0].setSpeedY(2);
+            setTimeout(function() { enemy[0].setSpeedY(0); },800);
+            setTimeout(function() { enemy[0].setSpeedX(-1);},1200);
+            setTimeout(function() { enemy[0].setSpeedX(0); },2700);
+            setTimeout(function() { enemy[0].setSpeedY(2); },4200);
+            setTimeout(function() { enemy[0].setSpeedY(0); },5700);
+            setTimeout(function() { enemy[0].setSpeedY(2); },9900);
+            break;
+        case 3:
+            enemy[0].setSpeedY(3);
+            enemy[0].setSpeedX(8);
+            setTimeout(function() { enemy[0].setSpeedX(0); },800);
+            setTimeout(function() { enemy[0].setSpeedX(-3);},1600);
+            setTimeout(function() { enemy[0].setSpeedY(5); },2400);
+            setTimeout(function() { enemy[0].setSpeedY(0); },2400);
+            setTimeout(function() { enemy[0].setSpeedY(-3);},3200);
+            setTimeout(function() { enemy[0].setSpeedX(0); },4000);
+            setTimeout(function() { enemy[0].setSpeedX(5);},4800);                       
+        default:
+            enemy[0].setSpeedY(3);
+            break;
+    }
+}
+
+
+function enemy(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;    
+    this.x = x;
+    this.y = y;    
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }
+    this.setSpeedX = function(x) {
+        this.speedX = x;
+    }  
+    this.setSpeedY = function(y) {
+        this.speedY = y;
+    }
+}
+
+
+function component(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;    
+    this.x = x;
+    this.y = y;    
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }  
+
+    this.setX = function() {
+        this.speedX = 0;
+     }
+
+}
+
+
+function missile(size, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = size;
+    this.height = size;
+    this.speedX = 0;
+    this.speedY = 0;    
+    this.x = x;
+    this.y = y;    
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }    
+}
+
+
+function updateGameArea() {
+    myGameArea.clear();
+    myGamePiece.speedX = 0;
+    myGamePiece.speedY = 0;    
+    if (myGameArea.keys && myGameArea.keys[37] && myGamePiece.x > 0) {myGamePiece.speedX = -5;  }
+    if (myGameArea.keys && myGameArea.keys[39] && myGamePiece.x < SCREEN_WIDTH-30) {myGamePiece.speedX = 5; }
+    if (myGameArea.keys && myGameArea.keys[38] && myGamePiece.y > 0) {myGamePiece.speedY = -3; }
+    if (myGameArea.keys && myGameArea.keys[40] && myGamePiece.y < SCREEN_HEIGHT-30) {myGamePiece.speedY = 3; }
+    if (myGameArea.keys && myGameArea.keys[32]) { 
+//        createMissile(5, myGamePiece.x, myGamePiece.y,5,-7);
+        createMissile(5, myGamePiece.x, myGamePiece.y,0,-7);
+//        createMissile(5, myGamePiece.x, myGamePiece.y,-5,-7); 
+    }
+    myGamePiece.newPos();    
+    myGamePiece.update();
+ 
+    for(var i=0; i<enemyList.length; i++){
+        enemyList[i].newPos();
+        enemyList[i].update();
+    
+        if(enemyList[i].x < -10 || enemyList[i].y > SCREEN_HEIGHT+20 
+        || enemyList[i].x > SCREEN_WIDTH+10 || enemyList[i].y < -20){
+           enemyList.splice(i,1); // 미사일 삭제
+        }
+    }
+
+    for(var i=0; i<myMissileList.length; i++){
+       myMissileList[i].newPos();
+       myMissileList[i].update();
+       if(myMissileList[i].x < -10 || myMissileList[i].y < -10
+       || myMissileList[i].x > SCREEN_WIDTH+10 || myMissileList[i].y > SCREEN_HEIGHT+10){
+           myMissileList.splice(i,1); // 미사일 삭제
+       }
+    }
+
+    //테스트용
+    document.getElementById("test").innerHTML= "미사일수:"+myMissileList.length+"  적수:"+enemyList.length;
+}
+</script>
+<p>Make sure this window has focus, then use the arrow keys on you keyboard to move the red square.</p>
+<p>When pressing both the left and the down arrow, the red square will move both down and to the left.</p>
+</body>
+<span id="test">dd</span>
+</html>
