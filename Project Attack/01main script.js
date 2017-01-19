@@ -1,10 +1,16 @@
 
 
 
+const UP=38;
+const DOWN=40;
+const LEFT=37;
+const RIGHT=39;
+const SPACEBAR=32;
 var myGamePiece;	//player 비행기 변수
 var myMissileList = [];		//미사일 변수
 var canvasX=480;
 var canvasY=700;
+var powerLevel; //미사일레벨
 
 function startGame() {
 	// player 비행기 이미지
@@ -123,6 +129,33 @@ function updateGameArea() {
         createMissile(5, myGamePiece.x, myGamePiece.y,0,-7);
         createMissile(5, myGamePiece.x, myGamePiece.y,-5,-7); 
     }
+    if (myGameArea.keys && myGameArea.keys[LEFT]) {myGamePiece.speedX = -1; }
+    if (myGameArea.keys && myGameArea.keys[RIGHT]) {myGamePiece.speedX = 1; }
+    if (myGameArea.keys && myGameArea.keys[UP]) {myGamePiece.speedY = -1; }
+    if (myGameArea.keys && myGameArea.keys[DOWN]) {myGamePiece.speedY = 1; }
+
+	// // spacebar 미사일 발사 level 1 size, currentX, currentY, speedX, speedY
+	// if (myGameArea.keys && myGameArea.keys[SPACEBAR]) {
+    //     //createMissile(5, myGamePiece.x, myGamePiece.y,5,-7);
+    //     createMissile(5, myGamePiece.x, myGamePiece.y,0,-7);
+    //     //createMissile(5, myGamePiece.x, myGamePiece.y,-5,-7); 
+    // }
+
+    // spacebar 미사일 발사 level 2 size, currentX, currentY, speedX, speedY
+	// if (myGameArea.keys && myGameArea.keys[SPACEBAR]) {
+    //     createMissile(5, myGamePiece.x-15, myGamePiece.y,0,-7);
+    //     createMissile(7, myGamePiece.x, myGamePiece.y,0,-7);
+    //     createMissile(5, myGamePiece.x+15, myGamePiece.y,0,-7); 
+    // }
+
+    // // spacebar 미사일 발사 leve 3 size, currentX, currentY, speedX, speedY
+	if (myGameArea.keys && myGameArea.keys[SPACEBAR]) {
+         createMissile(5, myGamePiece.x-15, myGamePiece.y,0,-7);
+         createMissile(7, myGamePiece.x, myGamePiece.y,0,-7);
+         createMissile(5, myGamePiece.x+15, myGamePiece.y,0,-7);  
+         createMissile(5, myGamePiece.x+15, myGamePiece.y,5,-7); 
+         createMissile(5, myGamePiece.x-15, myGamePiece.y,-5,-7); 
+     }
 	
     //적 그리기
     for(var i=0; i<enemyList.length; i++){
